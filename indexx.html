@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DisplaceOS | Disaster Relief Coordination</title>
+
+<style>
+:root {
+    --bg: #f4f7fb;
+    --white: #ffffff;
+    --dark: #101c32;
+    --blue: #2864e8;
+    --teal: #0e9f8a;
+    --red: #d94b55;
+    --amber: #c88416;
+    --text: #172033;
+    --muted: #6d7789;
+    --border: #e5eaf2;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+button, input, select, textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}
+
+.app {
+    display: grid;
+    grid-template-columns: 245px 1fr;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+
+.sidebar {
+    background: var(--dark);
+    color: white;
+    padding: 25px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #d9f5ed;
+    color: #087d68;
+    display: grid;
+    place-items: center;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.brand h2 {
+    font-size: 20px;
+}
+
+.brand small {
+    color: #aebbd0;
+    font-size: 10px;
+}
+
+.nav-title {
+    color: #8e9db4;
+    font-size: 11px;
+    margin: 10px 12px;
+    letter-spacing: 1px;
+}
+
+.nav button {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 5px;
+    border-radius: 9px;
+    background: transparent;
+    color: #c6d0e0;
+    text-align: left;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.nav button:hover,
+.nav button.active {
+    background: #22334f;
+    color: white;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    color: #aebbd0;
+    font-size: 12px;
+    line-height: 1.8;
+    border-top: 1px solid #2d3b53;
+    padding-top: 20px;
+}
+
+/* Main */
+
+main {
+    min-width: 0;
+}
+
+.topbar {
+    height: 75px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    gap: 15px;
+}
+
+.topbar select {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+}
+
+.content {
+    max-width: 1500px;
+    margin: auto;
+    padding: 30px;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.eyebrow {
+    color: var(--teal);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+}
+
+.heading h1 {
+    font-size: 29px;
+    margin: 8px 0;
+}
+
+.heading p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.primary {
+    background: var(--blue);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 9px;
+    font-weight: bold;
+}
+
+.primary:hover {
+    background: #174fc8;
+}
+
+.secondary {
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+/* Statistics */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.stat, .panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(26, 43, 77, 0.04);
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.stat strong {
+    display: block;
+    font-size: 30px;
+    margin: 13px 0 5px;
+}
+
+.stat small {
+    color: var(--muted);
+}
+
+.green-text {
+    color: var(--teal);
+}
+
+.red-text {
+    color: var(--red);
+}
+
+/* Layout */
+
+.grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.panel {
+    min-width: 0;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.panel-header h2 {
+    font-size: 17px;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Map */
+
+.map {
+    height: 280px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    background: #e8f0f1;
+}
+
+.map svg {
+    width: 100%;
+    height: 100%;
+}
+
+.map-label {
+    position: absolute;
+    background: white;
+    padding: 8px 10px;
+    border-radius: 7px;
+    font-size: 11px;
+    top: 12px;
+    right: 12px;
+}
+
+/* Tags */
+
+.tag {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 30px;
+    font-size: 11px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.urgent {
+    color: #bd3943;
+    background: #fff0f0;
+}
+
+.high {
+    color: #9c6410;
+    background: #fff5e5;
+}
+
+.normal, .allocated {
+    color: #087d68;
+    background: #e8f8f2;
+}
+
+.pending {
+    color: #9c6410;
+    background: #fff5e5;
+}
+
+.progressing {
+    color: #2857b9;
+    background: #edf3ff;
+}
+
+/* Camps */
+
+.camp {
+    margin-bottom: 20px;
+}
+
+.camp-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.camp-location {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.progress {
+    height: 7px;
+    background: #edf0f5;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress span {
+    display: block;
+    height: 100%;
+    background: var(--teal);
+    border-radius: 10px;
+}
+
+.progress span.full {
+    background: var(--red);
+}
+
+.camp-info {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 7px;
+}
+
+/* Table */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+th {
+    text-align: left;
+    color: #8590a1;
+    font-size: 10px;
+    letter-spacing: .7px;
+    padding: 12px 9px;
+    border-bottom: 1px solid var(--border);
+}
+
+td {
+    padding: 14px 9px;
+    font-size: 12px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+td button {
+    color: var(--blue);
+    background: transparent;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.resource-name {
+    font-weight: bold;
+}
+
+.resource-id {
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 4px;
+}
+
+/* Activity */
+
+.activity-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: #edf3ff;
+    display: grid;
+    place-items: center;
+    font-size: 17px;
+}
+
+.activity-item small {
+    display: block;
+    color: var(--muted);
+}
+
+/* Modal */
+
+.modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(16, 28, 50, .65);
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    z-index: 10;
+}
+
+.modal-backdrop.open {
+    display: flex;
+}
+
+.modal {
+    width: min(520px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.close {
+    width: 32px;
+    height: 32px;
+    background: #edf0f5;
+    border-radius: 8px;
+    font-size: 20px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 15px 0;
+}
+
+.field label {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    border: 1px solid #dce3ed;
+    border-radius: 9px;
+    padding: 11px;
+    outline: none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    border-color: var(--blue);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--dark);
+    color: white;
+    padding: 14px 18px;
+    border-radius: 9px;
+    display: none;
+    z-index: 20;
+    font-size: 13px;
+}
+
+.toast.show {
+    display: block;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* Responsive */
+
+@media (max-width: 1050px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .app {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .sidebar-footer,
+    .nav-title {
+        display: none;
+    }
+
+    .nav {
+        display: flex;
+        gap: 5px;
+        overflow-x: auto;
+    }
+
+    .nav button {
+        width: auto;
+        flex-shrink: 0;
+    }
+
+    .nav button span:last-child {
+        display: none;
+    }
+
+    .topbar {
+        padding: 0 15px;
+    }
+
+    .content {
+        padding: 20px 14px;
+    }
+
+    .heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .heading h1 {
+        font-size: 25px;
+    }
+
+    .stat {
+        padding: 14px;
+    }
+
+    .stat strong {
+        font-size: 25px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="logo">✚</div>
+            <div>
+                <h2>DisplaceOS</h2>
+                <small>RELIEF COORDINATION</small>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <div class="nav-title">WORKSPACE</div>
+
+            <button class="active" data-view="overview">
+                <span>▦</span><span>Overview</span>
+            </button>
+
+            <button data-view="requests">
+                <span>⚑</span><span>Relief Requests</span>
+            </button>
+
+            <button data-view="supplies">
+                <span>▣</span><span>Supply Inventory</span>
+            </button>
+
+            <button data-view="camps">
+                <span>⌂</span><span>Relief Camps</span>
+            </button>
+
+            <button data-view="teams">
+                <span>♧</span><span>Rescue Teams</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            🟢 Demo operations mode<br>
+            Disaster response dashboard<br><br>
+            Connecting resources with people who need help.
+        </div>
+
+    </aside>
+
+    <main>
+
+        <header class="topbar">
+            <div>
+                Disaster Response / <strong id="breadcrumb">Overview</strong>
+            </div>
+
+            <select id="roleSelect">
+                <option>Coordination Admin</option>
+                <option>Relief Camp</option>
+                <option>Rescue Team</option>
+                <option>Government Agency</option>
+            </select>
+        </header>
+
+        <div class="content">
+
+            <div class="heading">
+                <div>
+                    <div class="eyebrow">LIVE RESPONSE DASHBOARD</div>
+                    <h1 id="pageTitle">Disaster Relief Overview</h1>
+                    <p id="pageDescription">
+                        One shared picture of urgent needs, available supplies,
+                        and teams on the ground.
+                    </p>
+                </div>
+
+                <button class="primary" id="newRequestBtn">
+                    + Create Relief Request
+                </button>
+            </div>
+
+            <section class="stats">
+
+                <div class="stat">
+                    <div class="stat-label">Active Relief Requests</div>
+                    <strong id="statRequests">24</strong>
+                    <small><span class="red-text">8 urgent</span> · All locations</small>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-label">People in Relief Camps</div>
+                    <strong id="statPeople">2,200</strong>
+                    <small>Across 4 registered camps</small>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-label">Supply Readiness</div>
+                    <strong>76%</strong>
+                    <small><span class="green-text">+12%</span> since last update</small>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-label">Rescue Teams Active</div>
+                    <strong>12</strong>
+                    <small><span class="green-text">9 deployed</span> · 3 standby</small>
+                </div>
+
+            </section>
+
+            <div class="grid">
+
+                <section class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h2>Incident & Relief Map</h2>
+                            <div class="subtitle">Illustrative response locations</div>
+                        </div>
+
+                        <span class="tag normal">● Response Active</span>
+                    </div>
+
+                    <div class="map">
+
+                        <svg viewBox="0 0 650 310"
+                             preserveAspectRatio="xMidYMid slice">
+
+                            <rect width="650" height="310" fill="#e8f0f1"/>
+
+                            <path d="M0 40 Q100 10 180 60 T350 50 T520 60 T650 30"
+                                  fill="none" stroke="#d0e5dd" stroke-width="70"/>
+
+                            <path d="M-20 245 Q100 180 205 207 T385 201 T670 185"
+                                  stroke="#b8d8e7" stroke-width="25" fill="none"/>
+
+                            <g stroke="white" stroke-width="7" fill="none">
+                                <path d="M45 0L110 310"/>
+                                <path d="M210 0L175 310"/>
+                                <path d="M385 0L430 310"/>
+                                <path d="M540 0L510 310"/>
+                                <path d="M0 95L650 130"/>
+                                <path d="M0 170L650 80"/>
+                                <path d="M0 285L650 255"/>
+                            </g>
+
+                            <g font-size="11" fill="#7c9297">
+                                <text x="30" y="27">NORTH SECTOR</text>
+                                <text x="415" y="292">RIVER DISTRICT</text>
+                                <text x="240" y="28">HILL ZONE</text>
+                            </g>
+
+                            <g>
+                                <circle cx="150" cy="115" r="20"
+                                        fill="#dc4e5a" opacity=".18"/>
+                                <circle cx="150" cy="115" r="8" fill="#dc4e5a"/>
+                                <text x="164" y="109" font-size="11"
+                                      font-weight="bold">North Camp</text>
+                            </g>
+
+                            <g>
+                                <circle cx="365" cy="145" r="20"
+                                        fill="#d69b32" opacity=".18"/>
+                                <circle cx="365" cy="145" r="8" fill="#d69b32"/>
+                                <text x="378" y="139" font-size="11"
+                                      font-weight="bold">Riverside</text>
+                            </g>
+
+                            <g>
+                                <circle cx="490" cy="88" r="20"
+                                        fill="#169d88" opacity=".18"/>
+                                <circle cx="490" cy="88" r="8" fill="#169d88"/>
+                                <text x="503" y="82" font-size="11"
+                                      font-weight="bold">Central Hub</text>
+                            </g>
+
+                            <g>
+                                <circle cx="270" cy="240" r="20"
+                                        fill="#169d88" opacity=".18"/>
+                                <circle cx="270" cy="240" r="8" fill="#169d88"/>
+                                <text x="283" y="234" font-size="11"
+                                      font-weight="bold">South Camp</text>
+                            </g>
+
+                        </svg>
+
+                        <div class="map-label">◎ Illustrative map</div>
+                    </div>
+
+                </section>
+
+                <section class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h2>Relief Camp Capacity</h2>
+                            <div class="subtitle">Occupancy at priority locations</div>
+                        </div>
+                    </div>
+
+                    <div id="campList"></div>
+
+                </section>
+
+            </div>
+
+            <div class="grid">
+
+                <section class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h2 id="tableTitle">Priority Relief Requests</h2>
+                            <div class="subtitle">
+                                Track and allocate essential resources
+                            </div>
+                        </div>
+
+                        <button class="secondary" id="viewAllBtn">View All</button>
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Request</th>
+                                    <th>Location</th>
+                                    <th>Priority</th>
+                                    <th>Quantity</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="requestRows"></tbody>
+                        </table>
+
+                    </div>
+
+                </section>
+
+                <section class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h2>Coordination Activity</h2>
+                            <div class="subtitle">Recent response updates</div>
+                        </div>
+                    </div>
+
+                    <div id="activityList"></div>
+
+                </section>
+
+            </div>
+
+            <footer>
+                DisplaceOS Prototype · Demonstration Data · Not connected to emergency services
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- Create Request Modal -->
+
+<div class="modal-backdrop" id="requestModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+            <h2>Create Relief Request</h2>
+            <button class="close" id="closeModal">×</button>
+        </div>
+
+        <form id="requestForm">
+
+            <div class="field">
+                <label for="need">Resource Needed</label>
+
+                <select id="need" required>
+                    <option value="Drinking Water">💧 Drinking Water</option>
+                    <option value="Food Packs">🍱 Food Packs</option>
+                    <option value="Medical Kits">🩺 Medical Kits</option>
+                    <option value="Blankets">🧣 Blankets</option>
+                    <option value="Shelter Kits">⛺ Shelter Kits</option>
+                </select>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label for="location">Camp / Location</label>
+                    <input id="location" required
+                           placeholder="e.g. Riverside Camp">
+                </div>
+
+                <div class="field">
+                    <label for="quantity">Quantity Needed</label>
+                    <input id="quantity" type="number" min="1"
+                           required placeholder="e.g. 200">
+                </div>
+
+            </div>
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label for="priority">Priority</label>
+                    <select id="priority">
+                        <option>Urgent</option>
+                        <option selected>High</option>
+                        <option>Normal</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="requester">Requested By</label>
+                    <input id="requester" required
+                           placeholder="Team or agency">
+                </div>
+
+            </div>
+
+            <div class="field">
+                <label for="notes">Additional Details</label>
+                <textarea id="notes" rows="3"
+                          placeholder="People affected or delivery instructions"></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="secondary" id="cancelModal">
+                    Cancel
+                </button>
+
+                <button type="submit" class="primary">
+                    Submit Request
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const initialRequests = [
+    {
+        id: "DR-1042",
+        need: "Drinking Water",
+        icon: "💧",
+        location: "North Camp",
+        priority: "Urgent",
+        quantity: "800 litres",
+        status: "Pending"
+    },
+    {
+        id: "DR-1041",
+        need: "Medical Kits",
+        icon: "🩺",
+        location: "Riverside Camp",
+        priority: "Urgent",
+        quantity: "120 kits",
+        status: "In Progress"
+    },
+    {
+        id: "DR-1040",
+        need: "Food Packs",
+        icon: "🍱",
+        location: "South Camp",
+        priority: "High",
+        quantity: "450 packs",
+        status: "Pending"
+    },
+    {
+        id: "DR-1039",
+        need: "Blankets",
+        icon: "🧣",
+        location: "Hillview Camp",
+        priority: "Normal",
+        quantity: "200 units",
+        status: "Allocated"
+    },
+    {
+        id: "DR-1038",
+        need: "Shelter Kits",
+        icon: "⛺",
+        location: "North Camp",
+        priority: "High",
+        quantity: "75 kits",
+        status: "In Progress"
+    }
+];
+
+const camps = [
+    {
+        name: "North Relief Camp",
+        location: "North Sector",
+        people: 720,
+        capacity: 800
+    },
+    {
+        name: "Riverside Camp",
+        location: "River District",
+        people: 610,
+        capacity: 650
+    },
+    {
+        name: "South Community Hub",
+        location: "South Sector",
+        people: 480,
+        capacity: 700
+    },
+    {
+        name: "Hillview Shelter",
+        location: "Hill Zone",
+        people: 390,
+        capacity: 600
+    }
+];
+
+const activities = [
+    {
+        icon: "🚑",
+        text: "Rescue Team Alpha dispatched to North Sector.",
+        time: "8 minutes ago"
+    },
+    {
+        icon: "📦",
+        text: "Central Supply Hub prepared 200 food packs.",
+        time: "21 minutes ago"
+    },
+    {
+        icon: "⚕️",
+        text: "Riverside Camp reported a medical kit shortage.",
+        time: "35 minutes ago"
+    },
+    {
+        icon: "✓",
+        text: "Relief request DR-1039 marked as allocated.",
+        time: "52 minutes ago"
+    }
+];
+
+let requests = loadRequests();
+let nextId = 1043;
+let currentView = "overview";
+
+function loadRequests() {
+    try {
+        const saved = localStorage.getItem("displaceos_requests");
+        return saved ? JSON.parse(saved) : [...initialRequests];
+    } catch {
+        return [...initialRequests];
+    }
+}
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
+}
+
+function saveRequests() {
+    localStorage.setItem(
+        "displaceos_requests",
+        JSON.stringify(requests)
+    );
+}
+
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3000);
+}
+
+function renderCamps() {
+    const container = document.getElementById("campList");
+
+    container.innerHTML = camps.map(camp => {
+        const occupancy = Math.round(
+            camp.people / camp.capacity * 100
+        );
+
+        return `
+            <div class="camp">
+
+                <div class="camp-header">
+                    <div>
+                        <strong>${escapeHTML(camp.name)}</strong>
+                        <div class="camp-location">
+                            ${escapeHTML(camp.location)}
+                        </div>
+                    </div>
+
+                    <span class="tag ${
+                        occupancy >= 90 ? "urgent" :
+                        occupancy >= 75 ? "high" : "normal"
+                    }">
+                        ${occupancy}% full
+                    </span>
+                </div>
+
+                <div class="progress">
+                    <span class="${occupancy >= 90 ? "full" : ""}"
+                          style="width:${occupancy}%"></span>
+                </div>
+
+                <div class="camp-info">
+                    <span>${camp.people.toLocaleString()} people</span>
+                    <span>Capacity ${camp.capacity.toLocaleString()}</span>
+                </div>
+
+            </div>
+        `;
+    }).join("");
+}
+
+function renderRequests(showAll = false) {
+    const tbody = document.getElementById("requestRows");
+
+    const visibleRequests = showAll
+        ? requests
+        : requests.slice(0, 5);
+
+    if (visibleRequests.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6">No relief requests found.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = visibleRequests.map(request => {
+
+        const priorityClass = {
+            "Urgent": "urgent",
+            "High": "high",
+            "Normal": "normal"
+        }[request.priority] || "normal";
+
+        const statusClass = {
+            "Pending": "pending",
+            "In Progress": "progressing",
+            "Allocated": "allocated"
+        }[request.status] || "pending";
+
+        return `
+            <tr>
+                <td>
+                    <div class="resource-name">
+                        ${request.icon || "📦"}
+                        ${escapeHTML(request.need)}
+                    </div>
+                    <div class="resource-id">
+                        ${escapeHTML(request.id)}
+                    </div>
+                </td>
+
+                <td>${escapeHTML(request.location)}</td>
+
+                <td>
+                    <span class="tag ${priorityClass}">
+                        ${escapeHTML(request.priority)}
+                    </span>
+                </td>
+
+                <td>${escapeHTML(request.quantity)}</td>
+
+                <td>
+                    <span class="tag ${statusClass}">
+                        ${escapeHTML(request.status)}
+                    </span>
+                </td>
+
+                <td>
+                    <button data-allocate="${escapeHTML(request.id)}">
+                        ${request.status === "Allocated"
+                            ? "Details"
+                            : "Allocate"}
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+function renderActivities() {
+    document.getElementById("activityList").innerHTML =
+        activities.slice(0, 6).map(activity => `
+            <div class="activity-item">
+                <div class="activity-icon">
+                    ${activity.icon}
+                </div>
+
+                <div>
+                    ${escapeHTML(activity.text)}
+                    <small>${escapeHTML(activity.time)}</small>
+                </div>
+            </div>
+        `).join("");
+}
+
+function updateStats() {
+    const activeRequests = requests.filter(
+        request => request.status !== "Allocated"
+    ).length;
+
+    const people = camps.reduce(
+        (total, camp) => total + camp.people,
+        0
+    );
+
+    document.getElementById("statRequests").textContent =
+        activeRequests + 19;
+
+    document.getElementById("statPeople").textContent =
+        people.toLocaleString();
+}
+
+const viewInformation = {
+    overview: {
+        title: "Disaster Relief Overview",
+        description:
+            "One shared picture of urgent needs, available supplies, and teams on the ground."
+    },
+
+    requests: {
+        title: "Relief Requests",
+        description:
+            "Review incoming needs, set priorities, and track resource allocation."
+    },
+
+    supplies: {
+        title: "Supply Inventory",
+        description:
+            "Monitor essential resources required by affected communities."
+    },
+
+    camps: {
+        title: "Relief Camps",
+        description:
+            "Monitor shelter capacity and the number of people currently supported."
+    },
+
+    teams: {
+        title: "Rescue Teams",
+        description:
+            "Coordinate rescue teams and monitor deployment readiness."
+    }
+};
+
+function changeView(view) {
+    currentView = view;
+
+    document.querySelectorAll(".nav button").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.view === view
+        );
+    });
+
+    document.getElementById("breadcrumb").textContent =
+        viewInformation[view].title;
+
+    document.getElementById("pageTitle").textContent =
+        viewInformation[view].title;
+
+    document.getElementById("pageDescription").textContent =
+        viewInformation[view].description;
+
+    document.getElementById("tableTitle").textContent =
+        view === "requests"
+            ? "All Relief Requests"
+            : "Priority Relief Requests";
+
+    renderRequests(view === "requests");
+
+    if (view === "supplies") {
+        showToast("Inventory currently contains demonstration data.");
+    }
+
+    if (view === "teams") {
+        showToast("Team roster currently contains demonstration data.");
+    }
+}
+
+document.querySelectorAll(".nav button").forEach(button => {
+    button.addEventListener("click", () => {
+        changeView(button.dataset.view);
+    });
+});
+
+/* Modal */
+
+const modal = document.getElementById("requestModal");
+
+function openModal() {
+    modal.classList.add("open");
+    document.getElementById("location").focus();
+}
+
+function closeModal() {
+    modal.classList.remove("open");
+}
+
+document.getElementById("newRequestBtn")
+    .addEventListener("click", openModal);
+
+document.getElementById("closeModal")
+    .addEventListener("click", closeModal);
+
+document.getElementById("cancelModal")
+    .addEventListener("click", closeModal);
+
+modal.addEventListener("click", event => {
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+
+/* Create relief request */
+
+document.getElementById("requestForm")
+    .addEventListener("submit", event => {
+
+        event.preventDefault();
+
+        const need = document.getElementById("need").value;
+        const location = document.getElementById("location").value.trim();
+        const quantity = document.getElementById("quantity").value;
+        const priority = document.getElementById("priority").value;
+        const requester = document.getElementById("requester").value.trim();
+        const notes = document.getElementById("notes").value.trim();
+
+        const icons = {
+            "Drinking Water": "💧",
+            "Food Packs": "🍱",
+            "Medical Kits": "🩺",
+            "Blankets": "🧣",
+            "Shelter Kits": "⛺"
+        };
+
+        const request = {
+            id: "DR-" + nextId++,
+            need,
+            icon: icons[need],
+            location,
+            priority,
+            quantity: quantity + " units",
+            status: "Pending",
+            requester,
+            notes
+        };
+
+        requests.unshift(request);
+
+        activities.unshift({
+            icon: "📣",
+            text: `New ${need} request created for ${location}.`,
+            time: "Just now"
+        });
+
+        saveRequests();
+        renderRequests(currentView === "requests");
+        renderActivities();
+        updateStats();
+
+        closeModal();
+        event.target.reset();
+
+        showToast("Relief request created successfully.");
+    });
+
+/* Allocate a request */
+
+document.getElementById("requestRows")
+    .addEventListener("click", event => {
+
+        const button = event.target.closest("[data-allocate]");
+
+        if (!button) return;
+
+        const request = requests.find(
+            item => item.id === button.dataset.allocate
+        );
+
+        if (!request) return;
+
+        if (request.status === "Allocated") {
+            showToast("This request has already been allocated.");
+            return;
+        }
+
+        request.status = "Allocated";
+
+        activities.unshift({
+            icon: "📦",
+            text: `${request.id} for ${request.need} marked as allocated.`,
+            time: "Just now"
+        });
+
+        saveRequests();
+        renderRequests(currentView === "requests");
+        renderActivities();
+        updateStats();
+
+        showToast(request.id + " marked as allocated.");
+    });
+
+/* View all requests */
+
+document.getElementById("viewAllBtn")
+    .addEventListener("click", () => {
+        changeView(
+            currentView === "requests" ? "overview" : "requests"
+        );
+    });
+
+/* Role selector */
+
+document.getElementById("roleSelect")
+    .addEventListener("change", event => {
+        showToast(
+            "Selected role: " + event.target.value +
+            ". Role permissions are not implemented in this demo."
+        );
+    });
+
+/* Initialize dashboard */
+
+renderCamps();
+renderRequests();
+renderActivities();
+updateStats();
+</script>
+
+</body>
+</html>
